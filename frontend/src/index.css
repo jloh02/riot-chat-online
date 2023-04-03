@@ -1,0 +1,240 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+body {
+    background-color: #ffffff;
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+button:hover {
+    border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+     :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+    a:hover {
+        color: #747bff;
+    }
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 38px;
+    color: #141212;
+}
+
+input {
+    cursor: pointer;
+}
+
+input[type="text"] {
+    border: 5px solid #D1363A;
+    position: relative;
+    width: 419px;
+    height: 92px;
+    font-weight: 500;
+    border-radius: 5px;
+    color: #141212;
+    background-color: #ffffff;
+    font-size: 24px;
+    padding: 0px 0px 0px 23.74px;
+}
+
+input[type="password"] {
+    border: 5px solid #D1363A;
+    position: relative;
+    width: 419px;
+    height: 92px;
+    font-weight: 500;
+    border-radius: 5px;
+    color: #141212;
+    background-color: #ffffff;
+    font-size: 24px;
+    padding: 0px 0px 0px 23.74px;
+}
+
+button {
+    background-color: #D1363A;
+    color: #FFFFFF;
+    font-size: 21px;
+    width: 300px;
+    height: 56px;
+    border-radius: 20px;
+}
+
+.media {
+    color: #e7e7e7;
+    background-color: #e7e7e7;
+    margin-top: 27px;
+    margin-right: 13.4px;
+    margin-left: 13.4px;
+    width: 92px;
+    height: 46px;
+}
+
+img {
+    position: relative;
+    height: 28px;
+    width: auto;
+    top: -2px;
+}
+
+div {
+    width: auto
+}
+
+div.container {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin: 27px auto 0px;
+}
+
+svg {
+    color: #1e3050;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.icon visible {
+    color: #1e3050;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+input[type="checkbox"] {
+    border: 3px solid #D1363A;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: absolute;
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    margin-top: 10px;
+    left: 0%;
+    height: 20px;
+    width: 20px;
+}
+
+input[type="checkbox"]:checked {
+    border: 3px solid #D1363A;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #D1363A;
+    color: #FFFFFF;
+    margin-top: 10px;
+    left: 0%;
+    height: 20px;
+    width: 20px;
+}
+
+input[type="checkbox"]:checked::before {
+    content: "✔";
+    font-size: 20px;
+    color: white;
+    position: absolute;
+    left: 0px;
+    top: -7px;
+}
+
+label {
+    margin-top: 6px;
+    font-size: 18px;
+    left: 7%;
+    position: absolute;
+    color: #000000
+}
+
+.Footer {
+    position: fixed;
+    background-color: #656462;
+    display: inline;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: inherit;
+    padding: 17px;
+    justify-content: left;
+    text-align: left;
+}
+
+.Footer p {
+    font-size: 12px;
+    left: 0;
+    margin: 0;
+}
+
+.Footer a {
+    font-size: 9px;
+}
+
+.Footer img {
+    position: absolute;
+    height: 90%;
+    top: 5px;
+    right: 50px;
+}
+
+@media (max-width:720px) {
+    .Footer img {
+        top: 50%;
+        height: 50%;
+    }
+}
