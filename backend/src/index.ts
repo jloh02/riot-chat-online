@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { config } from "dotenv";
+import bodyParser from "body-parser";
 
 const PORT = process.env.PORT || "3000";
 
@@ -14,7 +15,10 @@ export default function startApp(done?: () => any) {
 
   app.get("/ping", (req, res) => res.send("pong"));
 
-  app.get("/key", (req, res) => {});
+  app.post("/auth/:id", (req, res) => {
+    console.log(req.body);
+    res.sendStatus(200);
+  });
 
   server.listen(PORT, () => {
     console.log("listening on port " + PORT);
