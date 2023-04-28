@@ -14,7 +14,7 @@ const COOKIE_REQUEST_BODY = {
 
 function extractSessionCookie(cookies: string[] | undefined): string[] {
   if (!cookies) return [];
-  return cookies.filter((v) => /^(tdid|asid|ssid)=/.test(v));
+  return cookies.filter((v) => /^(tdid|asid|ssid|clid)=/.test(v));
 }
 
 async function authorize(req: express.Request, res: express.Response) {
