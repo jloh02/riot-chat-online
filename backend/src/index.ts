@@ -1,20 +1,18 @@
-import https from "https";
-import { config } from "dotenv";
+import config from "./config";
 import app from "./app";
 import fs from "fs";
-
-config();
-
-const PORT = process.env.PORT || "3000";
+import https from "https";
 
 const server = https.createServer(
   {
     key: fs.readFileSync("server.key", "utf8"),
     cert: fs.readFileSync("server.crt", "utf8"),
-    passphrase: process.env.SSL_PASSPHRASE,
+    passphrase: config.SSL_PASSPHRASE,
   },
   app
 );
-server.listen(PORT, () => console.log("listening on port " + PORT));
+server.listen(config.PORT, () =>
+  console.log("listening on port " + config.PORT)
+);
 
 export default server;
