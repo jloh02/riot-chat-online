@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { axiosFetch } from "@/globals";
-import { validateBody } from "@/utils/validator";
+import { validateBody } from "@/middleware/validator";
 import { HttpStatusCode } from "axios";
 import express from "express";
 

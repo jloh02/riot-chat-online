@@ -1,25 +1,18 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { Agent } from "https";
-import { exit } from "process";
 
-export let buildNumber: string, riotClientVersion: string;
+const VERSION = {
+  buildNumber: "",
+  riotClientVersion: "",
+};
 
-axios
-  .get("https://valorant-api.com/v1/version")
-  .then((verRes) => {
-    buildNumber = verRes.data.data.riotClientBuild;
-    riotClientVersion = verRes.data.data.version;
-    if (!buildNumber || !riotClientVersion) {
-      throw Error(
-        "Undefined buildNumber and riotClientVersion: " +
-          { buildNumber, riotClientVersion }
-      );
-    }
-  })
-  .catch((err) => {
-    console.error("Unable to get client build version: ", err);
-    exit(1);
-  });
+// Getters for version variables
+export function getBuildNumber() {
+  return VERSION.buildNumber;
+}
+export function getRiotClientVersion() {
+  return VERSION.riotClientVersion;
+}
 
 const CIPHERS = [
   "TLS_CHACHA20_POLY1305_SHA256",
@@ -33,11 +26,26 @@ const CUSTOM_AGENT = new Agent({
   minVersion: "TLSv1.2",
 });
 
-export const axiosFetch = axios.create({
-  headers: {
-    "Content-Type": "application/json",
-    "User-Agent": `RiotClient/${buildNumber} rso-auth (Windows; 10;;Professional, x64)`,
-  },
+const headers = {
+  "Content-Type": "application/json",
+  "User-Agent": `RiotClient/${VERSION.buildNumber} rso-auth (Windows; 10;;Professional, x64)`,
+};
+
+export let axiosFetch: AxiosInstance = axios.create({
+  headers,
   httpsAgent: CUSTOM_AGENT,
   withCredentials: true,
 });
+
+export async function updateBuildVersions() {
+  try {
+    const verRes = await axios.get("https://valorant-api.com/v1/version");
+    VERSION.buildNumber = verRes.data.data.riotClientBuild;
+    VERSION.riotClientVersion = verRes.data.data.version;
+    if (!VERSION.buildNumber || !VERSION.riotClientVersion) {
+      console.error("Undefined buildNumber and riotClientVersion: " + VERSION);
+    }
+  } catch (err) {
+    console.error("Unable to get client build version: ", err);
+  }
+}
