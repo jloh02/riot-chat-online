@@ -66,7 +66,6 @@ async function authorize(req: express.Request, res: express.Response) {
     "set-cookie",
     cookies.map((cookie) => cookie.toString())
   );
-  console.log(res.getHeader("set-cookie"));
   res.status(authRes.status).send(authRes.data);
 }
 
