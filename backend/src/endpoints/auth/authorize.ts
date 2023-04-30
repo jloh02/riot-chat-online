@@ -3,6 +3,7 @@ import { axiosFetch } from "@/globals";
 import { validateBody } from "@/middleware/validator";
 import { HttpStatusCode } from "axios";
 import express from "express";
+import { CookieJar, parse } from "tough-cookie";
 
 const COOKIE_REQUEST_BODY = {
   client_id: "play-valorant-web-prod",
@@ -17,34 +18,30 @@ function extractSessionCookie(cookies: string[] | undefined): string[] {
   return cookies.filter((v) => /^(tdid|asid|ssid|clid)=/.test(v));
 }
 
+const AUTH_URL = "https://auth.riotgames.com/api/v1/authorization";
 async function authorize(req: express.Request, res: express.Response) {
-  let sessionCookie = extractSessionCookie(req.cookies);
+  const sessionCookies = extractSessionCookie(req.cookies);
+  const cookieJar = new CookieJar();
 
   // If user has no cookies to use, request for cookies
-  if (!sessionCookie.length) {
-    const cookieRes = await axiosFetch.post(
-      "https://auth.riotgames.com/api/v1/authorization",
-      COOKIE_REQUEST_BODY
-    );
-    if (cookieRes.status !== HttpStatusCode.Ok) {
-      res
-        .status(cookieRes.status)
-        .send({ success: false, message: cookieRes.data() });
+  if (!sessionCookies.length) {
+    const cookieRes = await axiosFetch.post(AUTH_URL, COOKIE_REQUEST_BODY);
+    if (
+      cookieRes.status !== HttpStatusCode.Ok ||
+      !cookieRes?.headers["set-cookie"]
+    ) {
+      res.status(cookieRes.status).send(cookieRes.data);
       return;
     }
 
-    sessionCookie = extractSessionCookie(cookieRes.headers["set-cookie"]);
-    if (!sessionCookie.length) {
-      res.status(HttpStatusCode.BadGateway).send({
-        success: false,
-        message: "Invalid cookies returned: " + cookieRes.headers["set-cookie"],
-      });
-    }
+    cookieRes.headers["set-cookie"].forEach((cookie) =>
+      cookieJar.setCookieSync(parse(cookie), AUTH_URL)
+    );
   }
 
   const { username, password } = req.body;
   const authRes = await axiosFetch.put(
-    "https://auth.riotgames.com/api/v1/authorization",
+    AUTH_URL,
     {
       type: "auth",
       username,
@@ -54,10 +51,22 @@ async function authorize(req: express.Request, res: express.Response) {
     },
     {
       headers: {
-        Cookie: sessionCookie,
+        Cookie: cookieJar.getCookieStringSync(AUTH_URL),
       },
     }
   );
+  if (authRes?.headers?.["set-cookie"])
+    authRes.headers["set-cookie"].forEach((cookie) =>
+      cookieJar.setCookieSync(parse(cookie), AUTH_URL)
+    );
+
+  //Send with updated cookies
+  const cookies = cookieJar.getCookiesSync(AUTH_URL);
+  res.setHeader(
+    "set-cookie",
+    cookies.map((cookie) => cookie.toString())
+  );
+  console.log(res.getHeader("set-cookie"));
   res.status(authRes.status).send(authRes.data);
 }
 

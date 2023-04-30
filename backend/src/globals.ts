@@ -31,7 +31,7 @@ const headers = {
   "User-Agent": `RiotClient/${VERSION.buildNumber} rso-auth (Windows; 10;;Professional, x64)`,
 };
 
-export let axiosFetch: AxiosInstance = axios.create({
+export const axiosFetch: AxiosInstance = axios.create({
   headers,
   httpsAgent: CUSTOM_AGENT,
   withCredentials: true,
