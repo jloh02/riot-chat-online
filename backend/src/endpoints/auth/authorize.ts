@@ -1,9 +1,14 @@
 import Joi from "joi";
-import { axiosFetch } from "@/globals";
+import { axiosFetch, RIOT_AUTH_URL } from "@/globals";
 import { validateBody } from "@/middleware/validator";
 import { HttpStatusCode } from "axios";
 import express from "express";
-import { CookieJar, parse } from "tough-cookie";
+import { CookieJar } from "tough-cookie";
+import {
+  convertCookieToLocal,
+  parseCookiesIntoJar,
+  storeCookies,
+} from "@/utils/cookie";
 
 const COOKIE_REQUEST_BODY = {
   client_id: "play-valorant-web-prod",
@@ -18,14 +23,13 @@ function extractSessionCookie(cookies: string[] | undefined): string[] {
   return cookies.filter((v) => /^(tdid|asid|ssid|clid)=/.test(v));
 }
 
-const AUTH_URL = "https://auth.riotgames.com/api/v1/authorization";
 async function authorize(req: express.Request, res: express.Response) {
   const sessionCookies = extractSessionCookie(req.cookies);
   const cookieJar = new CookieJar();
 
   // If user has no cookies to use, request for cookies
   if (!sessionCookies.length) {
-    const cookieRes = await axiosFetch.post(AUTH_URL, COOKIE_REQUEST_BODY);
+    const cookieRes = await axiosFetch.post(RIOT_AUTH_URL, COOKIE_REQUEST_BODY);
     if (
       cookieRes.status !== HttpStatusCode.Ok ||
       !cookieRes?.headers["set-cookie"]
@@ -33,15 +37,14 @@ async function authorize(req: express.Request, res: express.Response) {
       res.status(cookieRes.status).send(cookieRes.data);
       return;
     }
-
-    cookieRes.headers["set-cookie"].forEach((cookie) =>
-      cookieJar.setCookieSync(parse(cookie), AUTH_URL)
-    );
+    storeCookies(cookieRes, cookieJar, RIOT_AUTH_URL);
+  } else {
+    parseCookiesIntoJar(req, cookieJar, RIOT_AUTH_URL);
   }
 
   const { username, password } = req.body;
   const authRes = await axiosFetch.put(
-    AUTH_URL,
+    RIOT_AUTH_URL,
     {
       type: "auth",
       username,
@@ -51,22 +54,20 @@ async function authorize(req: express.Request, res: express.Response) {
     },
     {
       headers: {
-        Cookie: cookieJar.getCookieStringSync(AUTH_URL),
+        Cookie: cookieJar.getCookieStringSync(RIOT_AUTH_URL),
       },
     }
   );
-  if (authRes?.headers?.["set-cookie"])
-    authRes.headers["set-cookie"].forEach((cookie) =>
-      cookieJar.setCookieSync(parse(cookie), AUTH_URL)
-    );
 
-  //Send with updated cookies
-  const cookies = cookieJar.getCookiesSync(AUTH_URL);
-  res.setHeader(
-    "set-cookie",
-    cookies.map((cookie) => cookie.toString())
-  );
-  res.status(authRes.status).send(authRes.data);
+  storeCookies(authRes, cookieJar, RIOT_AUTH_URL);
+
+  res
+    .setHeader(
+      "set-cookie",
+      convertCookieToLocal(cookieJar.getSetCookieStringsSync(RIOT_AUTH_URL))
+    )
+    .status(authRes.status)
+    .send(authRes.data);
 }
 
 export default [

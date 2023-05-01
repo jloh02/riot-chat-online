@@ -6,6 +6,8 @@ const VERSION = {
   riotClientVersion: "",
 };
 
+export const RIOT_AUTH_URL = "https://auth.riotgames.com/api/v1/authorization";
+
 // Getters for version variables
 export function getBuildNumber() {
   return VERSION.buildNumber;
