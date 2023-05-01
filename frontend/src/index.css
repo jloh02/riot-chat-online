@@ -13,13 +13,12 @@
 }
 
 a {
-    font-weight: 500;
-    color: #646cff;
+    color: #FFFFFF;
     text-decoration: inherit;
 }
 
 a:hover {
-    color: #535bf2;
+    color: #d6464b;
 }
 
 body {
@@ -32,8 +31,12 @@ body {
 }
 
 h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
+    user-select: none;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 38px;
+    margin-bottom: 32px;
+    color: #141212;
 }
 
 button {
@@ -49,7 +52,7 @@ button {
 }
 
 button:hover {
-    border-color: #646cff;
+    border-color: #D1363A;
 }
 
 button:focus,
@@ -70,19 +73,16 @@ button:focus-visible {
     }
 }
 
-h1 {
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 38px;
-    color: #141212;
+input {
+    outline: none;
 }
 
-input {
-    cursor: pointer;
+input::selection {
+    background-color: #656462;
+    color: #ffffff;
 }
 
 input[type="text"] {
-    border: 5px solid #D1363A;
     position: relative;
     width: 419px;
     height: 92px;
@@ -94,8 +94,26 @@ input[type="text"] {
     padding: 0px 0px 0px 23.74px;
 }
 
+.MuiOutlinedInput-notchedOutline {
+    border: 5px solid #D1363A !important;
+}
+
+.MuiFormLabel-root {
+    font-weight: 500 !important;
+    color: #141212 !important;
+    font-size: 24px !important;
+    padding-left: 23.74px !important;
+    margin-top: 12px !important;
+}
+
+.MuiInputLabel-shrink {
+    color: #D1363A !important;
+    font-size: 17px !important;
+    padding-left: 2px !important;
+    margin-top: 2px !important;
+}
+
 input[type="password"] {
-    border: 5px solid #D1363A;
     position: relative;
     width: 419px;
     height: 92px;
@@ -110,10 +128,12 @@ input[type="password"] {
 button {
     background-color: #D1363A;
     color: #FFFFFF;
-    font-size: 21px;
-    width: 300px;
-    height: 56px;
+    font-size: 28px;
+    margin-top: 21px;
+    width: 212px;
+    height: 72px;
     border-radius: 20px;
+    outline: none !important;
 }
 
 .media {
@@ -147,62 +167,64 @@ div.container {
 svg {
     color: #1e3050;
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 37%;
+    right: 13px;
+    font-size: 20px;
 }
 
 .icon visible {
     color: #1e3050;
     position: absolute;
-    top: 10px;
     right: 10px;
 }
 
 input[type="checkbox"] {
-    border: 3px solid #D1363A;
+    border: solid #D1363A;
+    border-radius: 5px;
+    display: inline-block;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     position: absolute;
     background-color: #FFFFFF;
     color: #FFFFFF;
-    margin-top: 10px;
+    margin-top: 24px;
     left: 0%;
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
 }
 
 input[type="checkbox"]:checked {
-    border: 3px solid #D1363A;
+    border: solid #D1363A;
+    display: inline-block;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     background-color: #D1363A;
     color: #FFFFFF;
-    margin-top: 10px;
-    left: 0%;
-    height: 20px;
-    width: 20px;
 }
 
 input[type="checkbox"]:checked::before {
-    content: "✔";
-    font-size: 20px;
+    content: "\2714";
+    font-size: 16px;
+    margin-left: -5px;
     color: white;
     position: absolute;
-    left: 0px;
-    top: -7px;
 }
 
 label {
-    margin-top: 6px;
-    font-size: 18px;
-    left: 7%;
+    user-select: none;
+    margin-top: 18px;
+    font-size: 24px;
+    font-weight: 500;
+    left: 10%;
     position: absolute;
     color: #000000
 }
 
 .Footer {
+    user-select: none;
     position: fixed;
     background-color: #656462;
     display: inline;
@@ -227,9 +249,9 @@ label {
 
 .Footer img {
     position: absolute;
-    height: 90%;
-    top: 5px;
-    right: 50px;
+    height: 60%;
+    top: 20%;
+    right: 40px;
 }
 
 @media (max-width:720px) {
