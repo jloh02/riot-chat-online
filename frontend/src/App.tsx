@@ -15,6 +15,12 @@ const textFieldElement = document.querySelector(".mdc-text-field");
 if (textFieldElement) {
   const textField = new MDCTextField(textFieldElement);
 }
+interface InputProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 function App() {
   if (state === "login") {
@@ -35,6 +41,8 @@ function LogIn() {
   }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isUsernameFocused, setIsUsernameFocused] = useState(false);
+  const [usernameHasContent, setUsernameHasContent] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -54,12 +62,26 @@ function LogIn() {
       setHasContent(false);
     }
   };
-
+  const UsernameContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+    if (event.target.value !== "") {
+      setUsernameHasContent(true);
+    } else {
+      setUsernameHasContent(false);
+    }
+  };
   const handlePasswordFocus = () => {
     setIsPasswordFocused(true);
   };
   const handlePasswordBlur = () => {
     setIsPasswordFocused(false);
+  };
+  const handleUsernameFocus = () => {
+    setIsUsernameFocused(true);
+  };
+
+  const handleUsernameBlur = () => {
+    setIsUsernameFocused(false);
   };
   useEffect(() => {
     const textFieldElement = document.querySelector(".mdc-1");
@@ -69,8 +91,82 @@ function LogIn() {
       const textField2 = new MDCTextField(textFieldElement2);
     }
   }, []);
+  let Usernamebox;
   let passwordBox;
   let invalidMessage;
+  let fadeBox;
+  let twoFAPopUp;
+  if (appState == "validLogin") {
+    Usernamebox = (
+      <div className="input-container">
+        <input
+          className="username-input"
+          name="username-input"
+          type="text"
+          onFocus={handleUsernameFocus}
+          onBlur={handleUsernameBlur}
+          onChange={UsernameContent}
+          value={username}
+          disabled
+        />
+        <label
+          htmlfor="username-input"
+          className={
+            isUsernameFocused || usernameHasContent ? "up" : "inputlabel"
+          }
+        >
+          Username
+        </label>
+      </div>
+    );
+  } else {
+    Usernamebox = (
+      <div className="input-container">
+        <input
+          className="username-input"
+          name="username-input"
+          type="text"
+          onFocus={handleUsernameFocus}
+          onBlur={handleUsernameBlur}
+          onChange={UsernameContent}
+          value={username}
+        />
+        <label
+          htmlfor="username-input"
+          className={
+            isUsernameFocused || usernameHasContent ? "up" : "inputlabel"
+          }
+        >
+          Username
+        </label>
+      </div>
+    );
+  }
+  if (appState == "validLogin") {
+    fadeBox = (
+      <div
+        style={{
+          position: "fixed",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.6)",
+          zIndex: 1,
+        }}
+      ></div>
+    );
+    twoFAPopUp = (
+      <>
+        <dialog open>
+          <p>2FA</p>
+        </dialog>
+      </>
+    );
+  } else {
+    fadeBox = <></>;
+    twoFAPopUp = <></>;
+  }
   if (isPasswordFocused || hasContent) {
     if (appState == "validLogin") {
       passwordBox = (
@@ -131,7 +227,6 @@ function LogIn() {
     );
   }
   if (appState == "invalidLogin") {
-    console.log("incorrect");
     invalidMessage = (
       <div className="container" style={{ margin: "0px" }}>
         <FontAwesomeIcon
@@ -182,15 +277,7 @@ function LogIn() {
     return (
       <>
         <h1 id="header">Riot Chat Online</h1>
-        <TextField
-          id="outlined-basic"
-          label="Username"
-          variant="outlined"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ opacity: "99%" }}
-          disabled
-        />
+        {Usernamebox}
 
         <div className="container" style={{ opacity: "99%" }}>
           {passwordBox}
@@ -232,50 +319,15 @@ function LogIn() {
             backgroundColor: "#FFFFFF",
           }}
         ></div>
-        <div
-          style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.6)",
-          }}
-        ></div>
-        <div
-          style={{
-            position: "absolute",
-            height: "38%",
-            width: "38%",
-            left: "30%",
-            top: "30%",
-            backgroundColor: "white",
-            padding: "1%",
-          }}
-        >
-          <h1>2FA Authentication</h1>
-          <MuiOtpInput
-            style={{ padding: "0", marginleft: "10%" }}
-            length={6}
-            value={OTP}
-            onChange={
-              OTPChange
-            } /*Do the oncomplete, no padding, smaller width and center it */
-          />
-        </div>
+        {fadeBox}
+        {twoFAPopUp}
       </>
     );
   } else {
     return (
       <>
         <h1 id="header">Riot Chat Online</h1>
-        <TextField
-          id="outlined-basic"
-          label="Username"
-          variant="outlined"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        {Usernamebox}
 
         <div className="container">
           {passwordBox}
@@ -286,8 +338,8 @@ function LogIn() {
       <button id="media"><img src="src/assets/Apple_Logo.png" alt="Apple"></img></button>
       <button id="media"><img src="src/assets/xbox_logo.png" alt="Xbox"></img></button>
     */}
-          <input id="SignIn" type="checkbox" />
           <label htmlFor="SignIn">Stay signed in</label>
+          <input id="SignIn" type="checkbox" />
 
           <br></br>
           <br></br>
@@ -304,7 +356,7 @@ function LogIn() {
               Report a bug or request a feature
             </p>
           </a>
-          <a href="github.com/jloh02/repo/issues ">
+          <a href="https://github.com/jloh02/repo/issues ">
             <img src="/src/assets/git.png" alt="View source or report issue" />
           </a>
         </div>
