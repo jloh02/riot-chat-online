@@ -1,56 +1,89 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
   faEyeSlash,
-  faTriangleExclamation,
+  faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
-import { TextField, Typography } from "@mui/material";
-import "@material/textfield/dist/mdc.textfield.min.css";
-import { MuiOtpInput } from "mui-one-time-password-input";
-
 import "./App.css";
-var state = "login";
-const textFieldElement = document.querySelector(".mdc-text-field");
-if (textFieldElement) {
-  const textField = new MDCTextField(textFieldElement);
-}
-interface InputProps {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import Chat from "./pages/chat";
+
 
 function App() {
-  if (state === "login") {
-    return (
-      <>
-        <LogIn />
-      </>
-    );
-  }
+  return (
+    <Router>
+      <Routes>
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/" element={<LogIn />} />
+      </Routes>
+    </Router>
+  );
 }
 function LogIn() {
   const [appState, setAppState] = useState("login");
-  useEffect(() => {
-    const textFieldElement = document.querySelector(".mdc-text-field");
-    if (textFieldElement) {
-      const textField = new MDCTextField(textFieldElement);
-    }
-  }, []);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  function getAppState(){
+
+  }
+  let invalidMessage;
+  let fadeBox;
+  let twoFAPopUp;
+
+
+  /*Username box code */
+  const [username, setUsername] = useState("");
   const [isUsernameFocused, setIsUsernameFocused] = useState(false);
   const [usernameHasContent, setUsernameHasContent] = useState(false);
-  const [hasContent, setHasContent] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [OTP, setOTP] = useState("");
-  const OTPChange = (newValue) => {
-    setOTP(newValue);
+  const UsernameContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+    if (event.target.value !== "") {
+      setUsernameHasContent(true);
+    } else {
+      setUsernameHasContent(false);
+    }
+  };
+  const handleUsernameFocus = () => {
+    setIsUsernameFocused(true);
   };
 
+  const handleUsernameBlur = () => {
+    setIsUsernameFocused(false);
+  };
+  const Usernamebox = (
+    <div className="input-container">
+      <input
+        className="username-input"
+        name="username-input"
+        type="text"
+        onFocus={handleUsernameFocus}
+        onBlur={handleUsernameBlur}
+        onChange={UsernameContent}
+        value={username}
+        disabled={appState == "validLogin"}
+      />
+      <label
+        htmlfor="username-input"
+        className={
+          isUsernameFocused || usernameHasContent ? "up" : "inputlabel"
+        }
+      >
+        Username
+      </label>
+    </div>
+  );
+
+  /*password box code*/
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
+  const handlePasswordFocus = () => {
+    setIsPasswordFocused(true);
+  };
+  const handlePasswordBlur = () => {
+    setIsPasswordFocused(false);
+  };
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -62,87 +95,51 @@ function LogIn() {
       setHasContent(false);
     }
   };
-  const UsernameContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-    if (event.target.value !== "") {
-      setUsernameHasContent(true);
-    } else {
-      setUsernameHasContent(false);
-    }
-  };
-  const handlePasswordFocus = () => {
-    setIsPasswordFocused(true);
-  };
-  const handlePasswordBlur = () => {
-    setIsPasswordFocused(false);
-  };
-  const handleUsernameFocus = () => {
-    setIsUsernameFocused(true);
-  };
 
-  const handleUsernameBlur = () => {
-    setIsUsernameFocused(false);
-  };
-  useEffect(() => {
-    const textFieldElement = document.querySelector(".mdc-1");
-    const textFieldElement2 = document.querySelector(".mdc-2");
-    if (textFieldElement) {
-      const textField = new MDCTextField(textFieldElement);
-      const textField2 = new MDCTextField(textFieldElement2);
-    }
-  }, []);
-  let Usernamebox;
-  let passwordBox;
-  let invalidMessage;
-  let fadeBox;
-  let twoFAPopUp;
-  if (appState == "validLogin") {
-    Usernamebox = (
-      <div className="input-container">
+  const PasswordBox = (
+    <>
+      <div className="container">
         <input
           className="username-input"
-          name="username-input"
-          type="text"
-          onFocus={handleUsernameFocus}
-          onBlur={handleUsernameBlur}
-          onChange={UsernameContent}
-          value={username}
-          disabled
+          name="password-input"
+          type={showPassword ? "text" : "password"}
+          onFocus={handlePasswordFocus}
+          onBlur={handlePasswordBlur}
+          value={password}
+          onChange={handleHasContent}
+          disabled={appState == "validLogin"}
         />
         <label
-          htmlfor="username-input"
+          htmlfor="password-input"
           className={
-            isUsernameFocused || usernameHasContent ? "up" : "inputlabel"
+            isPasswordFocused || hasContent ? "up" : "inputlabel"
           }
         >
-          Username
+          Password
         </label>
+        {(isPasswordFocused || hasContent) && (appState != "validLogin") ? <FontAwesomeIcon
+          icon={showPassword ? faEye : faEyeSlash}
+          onClick={handleTogglePassword}
+        /> : (<></>)}
+
       </div>
-    );
-  } else {
-    Usernamebox = (
-      <div className="input-container">
-        <input
-          className="username-input"
-          name="username-input"
-          type="text"
-          onFocus={handleUsernameFocus}
-          onBlur={handleUsernameBlur}
-          onChange={UsernameContent}
-          value={username}
-        />
-        <label
-          htmlfor="username-input"
-          className={
-            isUsernameFocused || usernameHasContent ? "up" : "inputlabel"
-          }
-        >
-          Username
-        </label>
-      </div>
-    );
-  }
+    </>
+  );
+
+
+
+
+  const [OTP, setOTP] = useState("");
+  /*On valid login*/
   if (appState == "validLogin") {
+
+    let email = ""
+    const handleOTPHasContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setOTP(event.target.value);
+      if (event.target.value.length == 6) {
+        window.location.href = "/chat"
+      }
+    };
     fadeBox = (
       <div
         style={{
@@ -159,73 +156,25 @@ function LogIn() {
     twoFAPopUp = (
       <>
         <dialog open>
-          <p>2FA</p>
-        </dialog>
+          <b><h1 style={{ margin: "0px", margintop: "26px" }}>2FA Authentication</h1></b>
+          <p style={{ fontSize: "28px", margin: "0px", marginBottom: "40px" }}>A 6 digit code has been sent to {email}</p>
+          <input
+            type={"number"}
+            value={OTP}
+            onChange={handleOTPHasContent}
+            placeholder="Enter Code"
+          />
+          <br></br>
+          <button style={{ height: "48px", padding: "0px", fontsize: "16px" }}>submit</button>
+        </dialog >
       </>
     );
   } else {
     fadeBox = <></>;
     twoFAPopUp = <></>;
   }
-  if (isPasswordFocused || hasContent) {
-    if (appState == "validLogin") {
-      passwordBox = (
-        <>
-          <div className="container">
-            <TextField
-              id="outlined-basic"
-              label="Password"
-              variant="outlined"
-              type={showPassword ? "text" : "password"}
-              onFocus={handlePasswordFocus}
-              onBlur={handlePasswordBlur}
-              value={password}
-              onChange={handleHasContent}
-              disabled
-            />
-          </div>
-        </>
-      );
-    } else {
-      passwordBox = (
-        <>
-          <div className="container">
-            <TextField
-              id="outlined-basic"
-              label="Password"
-              variant="outlined"
-              type={showPassword ? "text" : "password"}
-              onFocus={handlePasswordFocus}
-              onBlur={handlePasswordBlur}
-              value={password}
-              onChange={handleHasContent}
-            />
-            <FontAwesomeIcon
-              icon={showPassword ? faEye : faEyeSlash}
-              onClick={handleTogglePassword}
-            />
-          </div>
-        </>
-      );
-    }
-  } else {
-    passwordBox = (
-      <>
-        <div className="container">
-          <TextField
-            id="outlined-basic"
-            label="Password"
-            variant="outlined"
-            type={showPassword ? "text" : "password"}
-            onFocus={handlePasswordFocus}
-            onBlur={handlePasswordBlur}
-            value={password}
-            onChange={handleHasContent}
-          />
-        </div>
-      </>
-    );
-  }
+
+  /*Invalid message */
   if (appState == "invalidLogin") {
     invalidMessage = (
       <div className="container" style={{ margin: "0px" }}>
@@ -260,109 +209,72 @@ function LogIn() {
     );
   }
 
+
+
+
   const handleSignIn = () => {
     // Here, you can access the values of the username and password states
     console.log("Username:", username);
     console.log("Password:", password);
     if (username === "correct" && password === "correct") {
-      console.log("correct");
       setAppState("validLogin");
     } else {
       setAppState("invalidLogin");
-      console.log(appState);
     }
     // Perform any necessary actions, such as sending a request to a server
   };
-  if (appState == "validLogin") {
-    return (
-      <>
-        <h1 id="header">Riot Chat Online</h1>
-        {Usernamebox}
 
-        <div className="container" style={{ opacity: "99%" }}>
-          {passwordBox}
-          {invalidMessage}
-          {/*
+  return (
+    <>
+      <h1 id="header">Riot Chat Online</h1>
+      {Usernamebox}
+
+      <div className="container" style={{ opacity: "99%" }}>
+        {PasswordBox}
+        {invalidMessage}
+        {/*
       <button id="media"><img src="src/assets/Facebook_Logo.png" alt="Facebook"></img></button>
       <button id="media"><img src="src/assets/google_logo.png" alt="Google"></img></button>
       <button id="media"><img src="src/assets/Apple_Logo.png" alt="Apple"></img></button>
       <button id="media"><img src="src/assets/xbox_logo.png" alt="Xbox"></img></button>
     */}
-          <input id="SignIn" type="checkbox" disabled />
-          <label htmlFor="SignIn">Stay signed in</label>
+        <input id="SignIn" type="checkbox" disabled={appState == "validLogin"} />
+        <label htmlFor="SignIn">Stay signed in</label>
 
-          <br></br>
-          <br></br>
-          <button onClick={handleSignIn} disabled>
-            Sign in
-          </button>
-        </div>
-        <div className="Footer">
-          <p>
-            Riot Chat Online was created under Riot Games' "Legal Jibber Jabber"
-            policy using assets owned by Riot Games.
+        <br></br>
+        <br></br>
+        <button onClick={handleSignIn} disabled={appState == "validLogin"}>
+          Sign in
+        </button>
+      </div>
+      <div className="Footer">
+        <p>
+          Riot Chat Online was created under Riot Games' "Legal Jibber Jabber"
+          policy using assets owned by Riot Games.
+        </p>
+        <p>Riot Games does not endorse or sponsor this project.</p>
+        <a href="github.com/jloh02/repo/issues ">
+          <p style={{ marginTop: "4px" }}>
+            Report a bug or request a feature
           </p>
-          <p>Riot Games does not endorse or sponsor this project.</p>
-          <a href="github.com/jloh02/repo/issues ">
-            <p style={{ marginTop: "4px" }}>
-              Report a bug or request a feature
-            </p>
-          </a>
-          <a href="github.com/jloh02/repo/issues ">
-            <img src="\src\assets\git.png" alt="View source or report issue" />
-          </a>
-        </div>
-        <div
-          style={{
-            height: "100%",
-            width: "100%",
-            backgroundColor: "#FFFFFF",
-          }}
-        ></div>
-        {fadeBox}
-        {twoFAPopUp}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1 id="header">Riot Chat Online</h1>
-        {Usernamebox}
+        </a>
+        <a href="github.com/jloh02/repo/issues ">
+          <img src="\src\assets\git.png" alt="View source or report issue" />
+        </a>
+      </div>
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          backgroundColor: "#FFFFFF",
+        }}
+      ></div>
+      {fadeBox}
+      {twoFAPopUp}
+    </>
+  );
 
-        <div className="container">
-          {passwordBox}
-          {invalidMessage}
-          {/*
-      <button id="media"><img src="src/assets/Facebook_Logo.png" alt="Facebook"></img></button>
-      <button id="media"><img src="src/assets/google_logo.png" alt="Google"></img></button>
-      <button id="media"><img src="src/assets/Apple_Logo.png" alt="Apple"></img></button>
-      <button id="media"><img src="src/assets/xbox_logo.png" alt="Xbox"></img></button>
-    */}
-          <label htmlFor="SignIn">Stay signed in</label>
-          <input id="SignIn" type="checkbox" />
-
-          <br></br>
-          <br></br>
-          <button onClick={handleSignIn}>Sign In</button>
-        </div>
-        <div className="Footer">
-          <p>
-            Riot Chat Online was created under Riot Games' "Legal Jibber Jabber"
-            policy using assets owned by Riot Games.
-          </p>
-          <p>Riot Games does not endorse or sponsor this project.</p>
-          <a href="github.com/jloh02/repo/issues ">
-            <p style={{ marginTop: "4px" }}>
-              Report a bug or request a feature
-            </p>
-          </a>
-          <a href="https://github.com/jloh02/repo/issues ">
-            <img src="/src/assets/git.png" alt="View source or report issue" />
-          </a>
-        </div>
-      </>
-    );
-  }
 }
+
 
 export default App;

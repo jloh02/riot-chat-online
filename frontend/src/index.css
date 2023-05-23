@@ -74,14 +74,16 @@ button:focus-visible {
 }
 
 input {
-    border: 1px solid #BDBDBD;
+    border: 5px solid #D1363A;
+    background-color: #FFFFFF;
     border-radius: 4px;
     padding: 8px;
     outline: none;
-}
-
-input:focus {
-    border-color: #2196F3;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 input::selection {
@@ -94,33 +96,29 @@ input[type="text"] {
     width: 419px;
     height: 92px;
     font-weight: 500;
+    color: #000000;
     border-radius: 5px;
-    color: #141212;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     font-size: 24px;
     padding: 0px 0px 0px 23.74px;
 }
 
-.MuiOutlinedInput-notchedOutline {
-    border: 5px solid #D1363A !important;
+input[type="number"] {
+    font-size: 24px;
+    width: 242px;
+    height: 61px;
+    color: #000000;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
-.MuiFormLabel-root {
-    font-weight: 500 !important;
-    color: #141212 !important;
-    font-size: 24px !important;
-    padding-left: 23.74px !important;
-    margin-top: 12px !important;
-}
-
-.MuiInputLabel-shrink {
-    color: #D1363A !important;
-    background-color: #FFFFFF;
-    border: #FFFFFF solid 4px;
-    width: auto !important;
-    font-size: 25px !important;
-    padding-left: 0px !important;
-    margin-top: -7px !important;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type="password"] {
@@ -139,7 +137,7 @@ button {
     background-color: #D1363A;
     text-align: "center";
     color: #FFFFFF;
-    font-size: 28px;
+    font-size: 20px;
     margin-top: 21px;
     width: 212px;
     height: 72px;
@@ -185,6 +183,7 @@ div.fade {
 }
 
 svg {
+    z-index: 2;
     color: #1e3050;
     position: absolute;
     top: 37%;
@@ -229,7 +228,7 @@ input[type="checkbox"]:checked::before {
     content: "\2714";
     font-size: 24px;
     margin-left: -9px;
-    margin-top: -5px;
+    margin-top: -50%;
     color: white;
     position: absolute;
 }
@@ -278,8 +277,10 @@ label {
 }
 
 @media (max-width:720px) {
+    .Footer p {
+        font-size: 8px;
+    }
     .Footer img {
-        top: 50%;
         height: 50%;
     }
 }
@@ -306,7 +307,9 @@ input.username-input {
 
 .up {
     z-index: 1;
+    color: #D1363A;
     background-color: #FFFFFF;
+    border: 3px #FFFFFF solid;
     font-size: 20px;
     margin-top: 0px;
     left: 5%;
@@ -314,5 +317,11 @@ input.username-input {
 }
 
 dialog {
+    border-radius: 20px;
+    width: 40%;
+    height: 40%;
+    background-color: white;
+    color: #000000;
+    top: 30%;
     z-index: 2;
 }
